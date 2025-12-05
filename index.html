@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KitchenEase Store - Smart Kitchen Tools</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --light-bg: #f8f9fa;
+            --dark-text: #2c3e50;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            line-height: 1.6;
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .btn-primary-custom {
+            background-color: var(--secondary-color);
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary-custom:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .floating-chat-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            animation: pulse 2s infinite;
+        }
+
+        .floating-chat-button:hover {
+            transform: scale(1.1);
+            animation: none;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            }
+            50% {
+                box-shadow: 0 4px 30px rgba(52, 152, 219, 0.6);
+            }
+            100% {
+                box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            }
+        }
+
+        .product-card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .section-title {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--secondary-color);
+            border-radius: 2px;
+        }
+
+        .features-section {
+            background: white;
+            padding: 80px 0;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+        }
+
+        .footer {
+            background: var(--primary-color);
+            color: white;
+            padding: 50px 0 20px;
+            text-align: center;
+        }
+
+        .footer a {
+            color: var(--secondary-color);
+            text-decoration: none;
+        }
+
+        /* Chatbot Integration Styles */
+        .chatbot-widget {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 350px;
+            height: 500px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 999;
+            display: none;
+            overflow: hidden;
+            border: none;
+        }
+
+        .chatbot-widget iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--danger-color);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-5px); }
+            60% { transform: translateY(-3px); }
+        }
+
+        .quick-help-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .help-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .reviews-section {
+            background: #f8f9fa;
+            padding: 60px 0;
+        }
+
+        .review-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .review-rating {
+            color: #ffc107;
+            font-size: 1.2rem;
+        }
+
+        .review-text {
+            font-style: italic;
+            margin: 15px 0;
+            line-height: 1.6;
+        }
+
+        .review-author {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .star-rating {
+            color: #ffc107;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .chatbot-widget {
+                width: calc(100vw - 40px);
+                height: calc(100vh - 100px);
+                bottom: 70px;
+                right: 20px;
+                left: 20px;
+                border-radius: 15px;
+            }
+            
+            .floating-chat-button {
+                width: 50px;
+                height: 50px;
+                bottom: 15px;
+                right: 15px;
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <h1 class="hero-title">🏪 KitchenEase Store</h1>
+            <p class="hero-subtitle">Smart Kitchen Tools - Where Quality Meets Intelligence</p>
+            <button class="btn btn-primary btn-primary-custom" onclick="scrollToProducts()">
+                <i class="fas fa-shopping-cart"></i> Shop Now
+            </button>
+        </div>
+    </section>
+
+    <!-- Quick Help Section -->
+    <section class="quick-help-section">
+        <div class="container">
+            <h2 class="section-title text-white">🤖 Need Help?</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="help-card">
+                        <h4><i class="fas fa-robot"></i> Smart Assistant</h4>
+                        <p>Get instant answers to all your questions from our AI assistant</p>
+                        <button class="btn btn-light" onclick="openChatbot()">
+                            💬 Start Chat
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="help-card">
+                        <h4><i class="fas fa-headset"></i> Customer Support</h4>
+                        <p>Our support team is available 24/7 to help with any inquiries</p>
+                        <a href="tel:+1234567890" class="btn btn-light">
+                            📞 Call Support
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="help-card">
+                        <h4><i class="fas fa-truck"></i> Track Order</h4>
+                        <p>Track your order step by step from purchase to delivery</p>
+                        <button class="btn btn-light">
+                            📦 Track Order
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section class="products-section py-5">
+        <div class="container">
+            <h2 class="section-title">🔥 Featured Products</h2>
+            <div class="row">
+                <!-- Product 1 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card product-card">
+                        <img src="images/air_fryer_product_8.png" class="card-img-top" alt="Smart Air Fryer XL" onclick="showProductModal(1)">
+                        <div class="card-body">
+                            <h5 class="card-title">Smart Air Fryer XL</h5>
+                            <p class="card-text">Smart air fryer with mobile app and healthy oil-free cooking</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="price h4 text-success">$34.99</span>
+                                <div class="rating">
+                                    <i class="fas fa-star star-rating"></i>
+                                    <i class="fas fa-star star-rating"></i>
+                                    <i class="fas fa-star star-rating"></i>
+                                    <i class="fas fa-star star-rating"></i>
+                                    <i class="fas fa-star-half-alt star-rating"></i>
+                                    4.8
+                                </div>
+                            </div>
+                            <button class="btn btn-primary w-100 mt-3">
+                                <i class="fas fa-cart-plus"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 2 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card product-card">
+                        <img src="images/garlic_press_product_7.jpg" class="card-img-top" alt="Electric Garlic Press" onclick="showProductModal(2)">
+                        <div class="card-body">
+                            <h5 class="card-title">Electric Garlic Press</h5>
+                            <p class="card-text">Automatic garlic press that works with one touch and easy to clean</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="price h4 text-success">$12.99</span>
+                                <div class="rating">
+                                    <i class="fas fa-star star-rating"></i>
+                                    <i class="fas fa-star star-rating"></i>
+                                    <i class="fas fa-star star-rating"></i>
+                                    <i class="fas fa-star star-rating"></i>
+                                    <i class="far fa-star star-rating"></i>
+                                    4.6
+                                </div>
+                            </div>
+                            <button class="btn btn-primary w-100 mt-3">
+                                <i class="fas fa-cart-plus"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 3 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card product-card">
+                        <img src="images/thermometer_product_6.jpg" class="card-img-top" alt="Bluetooth Meat Thermometer" onclick="showProductModal(3)">
+                        <div class="card-body">
+                            <h5 class="card-title">Bluetooth Meat Thermometer</h5>
+                            <p class="card-text">Smart thermometer with Bluetooth connectivity and mobile app</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="price h4 text-success">$18.99</span>
+                                <div class="rating">
+                                    <i class="fas fa-star star-rating"></i>
+                                    <i class="fas fa-star star-rating"></i>
+                                    <i class="fas fa-star star-rating"></i>
+                                    <i class="fas fa-star star-rating"></i>
+                                    <i class="fas fa-star-half-alt star-rating"></i>
+                                    4.7
+                                </div>
+                            </div>
+                            <button class="btn btn-primary w-100 mt-3">
+                                <i class="fas fa-cart-plus"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 4 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card product-card">
+                        <img src="images/soap_dispenser_product_5.jpg" class="card-img-top" alt="Automatic Soap Dispenser" onclick="showProductModal(4)">
+                        <div class="card-body">
+                            <h5 class="card-title">Automatic Soap Dispenser</h5>
+                            <p class="card-text">Smart touch soap dispenser with water resistance</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="price h4 text-success">$9.99</span>
+                                <div class="rating">
+                                    <i class="fas fa-star star-rating"></i>
+                                    <i class="fas fa-star star-rating"></i>
+                                    <i class="fas fa-star star-rating"></i>
+                                    <i class="fas fa-star star-rating"></i>
+                                    <i class="far fa-star star-rating"></i>
+                                    4.5
+                                </div>
+                            </div>
+                            <button class="btn btn-primary w-100 mt-3">
+                                <i class="fas fa-cart-plus"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 5 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card product-card">
+                        <img src="images/usb_blender_product_5.jpg" class="card-img-top" alt="USB Portable Blender" onclick="showProductModal(5)">
+                        <div class="card-body">
+                            <h5 class="card-title">USB Portable Blender</h5>
+                            <p class="card-text">Portable blender that works with USB charger and safe base</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="price h4 text-success">$8.99</span>
+                                <div class="rating">
+                                    <i class="fas fa-star star-rating"></i>
+                                    <i class="fas fa-star star-rating"></i>
+                                    <i class="fas fa-star star-rating"></i>
+                                    <i class="fas fa-star star-rating"></i>
+                                    <i class="far fa-star star-rating"></i>
+                                    4.4
+                                </div>
+                            </div>
+                            <button class="btn btn-primary w-100 mt-3">
+                                <i class="fas fa-cart-plus"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reviews Section -->
+    <section class="reviews-section">
+        <div class="container">
+            <h2 class="section-title">⭐ Customer Reviews</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="review-card">
+                        <div class="review-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p class="review-text">"The Smart Air Fryer is amazing! It's so easy to use and the food comes out perfectly crispy. The mobile app is very convenient."</p>
+                        <p class="review-author">- Sarah Johnson</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="review-card">
+                        <div class="review-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p class="review-text">"Love the Electric Garlic Press! Saves me so much time and it's very easy to clean. Highly recommended!"</p>
+                        <p class="review-author">- Mike Chen</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="review-card">
+                        <div class="review-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <p class="review-text">"The Bluetooth Thermometer is perfect for grilling! Connects seamlessly to my phone and gives accurate readings."</p>
+                        <p class="review-author">- Emma Davis</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="review-card">
+                        <div class="review-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p class="review-text">"The Soap Dispenser is so convenient and hygienic. No more touching the soap bottle with dirty hands!"</p>
+                        <p class="review-author">- John Smith</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="review-card">
+                        <div class="review-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                        <p class="review-text">"Great portable blender for my morning smoothies. USB charging is super convenient and it works perfectly."</p>
+                        <p class="review-author">- Lisa Wilson</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="review-card">
+                        <div class="review-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p class="review-text">"Excellent customer service and fast shipping. All products work as described. Will definitely shop here again!"</p>
+                        <p class="review-author">- Robert Brown</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+        <div class="container">
+            <h2 class="section-title">✨ Why Choose KitchenEase?</h2>
+            <div class="row">
+                <div class="col-md-4 text-center">
+                    <div class="feature-icon">
+                        <i class="fas fa-shipping-fast"></i>
+                    </div>
+                    <h4>Fast & Free Shipping</h4>
+                    <p>Free shipping on orders over $50 within 2-3 business days</p>
+                </div>
+                <div class="col-md-4 text-center">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h4>2-Year Warranty</h4>
+                    <p>Comprehensive warranty on all products against manufacturing defects</p>
+                </div>
+                <div class="col-md-4 text-center">
+                    <div class="feature-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h4>Smart Assistant</h4>
+                    <p>AI assistant available 24/7 to answer all your questions</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>🏪 KitchenEase Store</h5>
+                    <p>Your trusted store for smart kitchen tools</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Quick Links</h5>
+                    <p><a href="#products">Products</a></p>
+                    <p><a href="#" onclick="openChatbot()">Smart Assistant</a></p>
+                    <p><a href="admin_panel.html">Admin Panel</a></p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Contact Us</h5>
+                    <p>📧 support@kitchen-ease.com</p>
+                    <p>📞 +1 (555) 123-4567</p>
+                    <p>📍 New York, NY, USA</p>
+                </div>
+            </div>
+            <hr style="border-color: rgba(255,255,255,0.3); margin: 30px 0;">
+            <p>&copy; 2025 KitchenEase Store. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Floating Chat Button -->
+    <button class="floating-chat-button" onclick="openChatbot()" id="chatButton">
+        <i class="fas fa-comments"></i>
+        <span class="notification-badge" id="notificationBadge">!</span>
+    </button>
+
+    <!-- Chatbot Widget -->
+    <div class="chatbot-widget" id="chatbotWidget">
+        <iframe src="chatbot_english.html" title="KitchenEase AI Assistant"></iframe>
+    </div>
+
+    <!-- Product Modal -->
+    <div class="modal fade" id="productModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalProductTitle"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="modalProductBody">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Product data for modal
+        const productData = {
+            1: {
+                title: "Smart Air Fryer XL",
+                price: "$34.99",
+                image: "images/air_fryer_product_8.png",
+                description: "Revolutionary air fryer with smart features and mobile app control",
+                features: [
+                    "Wi-Fi enabled with mobile app",
+                    "Oil-free healthy cooking",
+                    "8 preset cooking programs",
+                    "Digital touchscreen display",
+                    "Auto shut-off safety feature",
+                    "Dishwasher-safe parts"
+                ],
+                reviews: [
+                    {rating: 5, text: "Best air fryer I've ever used!", author: "Sarah M."},
+                    {rating: 5, text: "The app makes it so easy to control", author: "Mike R."},
+                    {rating: 4, text: "Great quality, highly recommend", author: "Emma L."}
+                ]
+            },
+            2: {
+                title: "Electric Garlic Press",
+                price: "$12.99",
+                image: "images/garlic_press_product_7.jpg",
+                description: "Effortless garlic crushing with one-touch operation",
+                features: [
+                    "One-touch operation",
+                    "Easy to clean design",
+                    "Compact and lightweight",
+                    "Stainless steel blades",
+                    "Ergonomic handle",
+                    "Dishwasher safe"
+                ],
+                reviews: [
+                    {rating: 5, text: "Saves so much time!", author: "John D."},
+                    {rating: 4, text: "Works perfectly, easy cleanup", author: "Lisa K."},
+                    {rating: 5, text: "Much better than manual press", author: "David P."}
+                ]
+            },
+            3: {
+                title: "Bluetooth Meat Thermometer",
+                price: "$18.99",
+                image: "images/thermometer_product_6.jpg",
+                description: "Smart thermometer with wireless connectivity",
+                features: [
+                    "Bluetooth connectivity",
+                    "Mobile app integration",
+                    "Dual probe design",
+                    "Temperature alerts",
+                    "Waterproof design",
+                    "Long battery life"
+                ],
+                reviews: [
+                    {rating: 5, text: "Perfect for grilling!", author: "Mark T."},
+                    {rating: 5, text: "App is very user-friendly", author: "Anna S."},
+                    {rating: 4, text: "Accurate readings every time", author: "Chris W."}
+                ]
+            },
+            4: {
+                title: "Automatic Soap Dispenser",
+                price: "$9.99",
+                image: "images/soap_dispenser_product_5.jpg",
+                description: "Touch-free soap dispensing for better hygiene",
+                features: [
+                    "Infrared sensor technology",
+                    "Waterproof design",
+                    "Large capacity",
+                    "Easy to refill",
+                    "Energy efficient",
+                    "Modern design"
+                ],
+                reviews: [
+                    {rating: 5, text: "So convenient and hygienic!", author: "Jennifer L."},
+                    {rating: 4, text: "Works great in kitchen", author: "Tom H."},
+                    {rating: 5, text: "Love the touch-free feature", author: "Michelle B."}
+                ]
+            },
+            5: {
+                title: "USB Portable Blender",
+                price: "$8.99",
+                image: "images/usb_blender_product_5.jpg",
+                description: "Portable blender for smoothies anywhere, anytime",
+                features: [
+                    "USB rechargeable battery",
+                    "Portable design",
+                    "Safe base stand",
+                    "BPA-free materials",
+                    "Easy one-button operation",
+                    "Compact storage"
+                ],
+                reviews: [
+                    {rating: 4, text: "Great for morning smoothies", author: "Amanda R."},
+                    {rating: 5, text: "USB charging is very convenient", author: "Kevin M."},
+                    {rating: 4, text: "Works perfectly, easy to use", author: "Rachel G."}
+                ]
+            }
+        };
+
+        // Chatbot Integration Functions
+        function openChatbot() {
+            const widget = document.getElementById('chatbotWidget');
+            const badge = document.getElementById('notificationBadge');
+            
+            // Show widget
+            widget.style.display = 'block';
+            
+            // Hide notification badge
+            badge.style.display = 'none';
+            
+            // Add welcome message after a delay
+            setTimeout(() => {
+                try {
+                    widget.contentWindow.postMessage({
+                        type: 'open',
+                        message: 'Hello! How can I help you today?',
+                        timestamp: new Date()
+                    }, '*');
+                } catch (e) {
+                    console.log('Iframe communication not available');
+                }
+            }, 1000);
+        }
+
+        function closeChatbot() {
+            document.getElementById('chatbotWidget').style.display = 'none';
+        }
+
+        // Product modal function
+        function showProductModal(productId) {
+            const product = productData[productId];
+            if (!product) return;
+
+            const modal = new bootstrap.Modal(document.getElementById('productModal'));
+            const titleElement = document.getElementById('modalProductTitle');
+            const bodyElement = document.getElementById('modalProductBody');
+
+            titleElement.textContent = product.title;
+
+            let reviewsHtml = '';
+            product.reviews.forEach(review => {
+                const stars = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
+                reviewsHtml += `
+                    <div class="review-card mb-3">
+                        <div class="review-rating">${stars}</div>
+                        <p class="review-text">"${review.text}"</p>
+                        <p class="review-author">- ${review.author}</p>
+                    </div>
+                `;
+            });
+
+            let featuresHtml = '';
+            product.features.forEach(feature => {
+                featuresHtml += `<li><i class="fas fa-check text-success"></i> ${feature}</li>`;
+            });
+
+            bodyElement.innerHTML = `
+                <div class="row">
+                    <div class="col-md-6">
+                        <img src="${product.image}" class="img-fluid rounded" alt="${product.title}">
+                    </div>
+                    <div class="col-md-6">
+                        <h4>${product.title}</h4>
+                        <p class="text-muted">${product.description}</p>
+                        <h5 class="text-success">${product.price}</h5>
+                        
+                        <h6 class="mt-4">Key Features:</h6>
+                        <ul class="list-unstyled">
+                            ${featuresHtml}
+                        </ul>
+                        
+                        <button class="btn btn-primary btn-lg w-100 mt-3">
+                            <i class="fas fa-cart-plus"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="mt-4">
+                    <h5>Customer Reviews:</h5>
+                    ${reviewsHtml}
+                </div>
+            `;
+
+            modal.show();
+        }
+
+        // Scroll to products function
+        function scrollToProducts() {
+            document.querySelector('.products-section').scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+
+        // Show notification badge after some time
+        setTimeout(() => {
+            const badge = document.getElementById('notificationBadge');
+            badge.style.display = 'flex';
+            badge.textContent = '1';
+        }, 30000); // Show after 30 seconds
+
+        // Hide badge when chatbot is opened
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatButton = document.getElementById('chatButton');
+            chatButton.addEventListener('click', function() {
+                const badge = document.getElementById('notificationBadge');
+                badge.style.display = 'none';
+            });
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(event) {
+            // Ctrl/Cmd + Enter to open chatbot
+            if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+                openChatbot();
+            }
+            
+            // Escape to close chatbot
+            if (event.key === 'Escape') {
+                closeChatbot();
+            }
+        });
+
+        // Smooth scrolling for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Add some interactive elements
+        document.querySelectorAll('.product-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-8px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(-5px) scale(1)';
+            });
+        });
+
+        // Simulate real-time notifications (for demo)
+        setInterval(() => {
+            const notifications = [
+                '🎉 New offer: 20% discount on all cooking utensils!',
+                '📦 Your order has been shipped successfully - Tracking: TR123456',
+                '⭐ New review: "Amazing product!" - 5 star rating',
+                '🚚 Your order is on its way to you!'
+            ];
+            
+            // Show random notification
+            const randomNotification = notifications[Math.floor(Math.random() * notifications.length)];
+            console.log('Notification:', randomNotification);
+        }, 60000); // Every minute
+
+        // Initialize
+        console.log('🏪 KitchenEase Store initialized successfully!');
+        console.log('🤖 AI Chatbot ready for assistance!');
+    </script>
+</body>
+</html>

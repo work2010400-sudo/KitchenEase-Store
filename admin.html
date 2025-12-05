@@ -1,0 +1,1495 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم الإدارة - KitchenEase Store</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --light-bg: #f8f9fa;
+            --dark-text: #2c3e50;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+        }
+
+        .admin-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .sidebar {
+            background: white;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            min-height: calc(100vh - 120px);
+        }
+
+        .nav-link {
+            color: var(--dark-text);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            margin: 0.25rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background-color: var(--secondary-color);
+            color: white;
+            transform: translateX(-5px);
+        }
+
+        .nav-link i {
+            margin-left: 0.5rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-card.success {
+            background: linear-gradient(135deg, var(--success-color), #2ecc71);
+        }
+
+        .stat-card.warning {
+            background: linear-gradient(135deg, var(--warning-color), #f1c40f);
+        }
+
+        .stat-card.danger {
+            background: linear-gradient(135deg, var(--danger-color), #ff6b6b);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .table th {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            font-weight: 600;
+        }
+
+        .table td {
+            vertical-align: middle;
+        }
+
+        .btn-action {
+            margin: 0 2px;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .modal-content {
+            border-radius: 15px;
+            border: none;
+        }
+
+        .modal-header {
+            background: var(--primary-color);
+            color: white;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .form-control, .form-select {
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            padding: 0.75rem;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+        }
+
+        .alert {
+            border: none;
+            border-radius: 10px;
+            padding: 1rem 1.5rem;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 2rem 0;
+        }
+
+        .order-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .status-processing {
+            background-color: #cce5ff;
+            color: #004085;
+        }
+
+        .status-shipped {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .status-delivered {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .status-cancelled {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .profit-calculation {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 1rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                margin-bottom: 2rem;
+            }
+        }
+
+        .spinner-border-sm {
+            width: 1rem;
+            height: 1rem;
+        }
+
+        .loading {
+            display: none;
+        }
+
+        .text-success {
+            color: var(--success-color) !important;
+        }
+
+        .text-danger {
+            color: var(--danger-color) !important;
+        }
+
+        .text-warning {
+            color: var(--warning-color) !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="admin-header">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h1><i class="fas fa-store"></i> لوحة تحكم الإدارة - KitchenEase Store</h1>
+                </div>
+                <div class="col-md-6 text-end">
+                    <span class="badge bg-light text-dark">الإصدار 1.0</span>
+                    <button class="btn btn-outline-light btn-sm" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 sidebar p-0">
+                <nav class="nav flex-column p-3">
+                    <h6 class="text-muted mb-3">القوائم الرئيسية</h6>
+                    <a class="nav-link active" href="#" onclick="showSection('dashboard')">
+                        <i class="fas fa-tachometer-alt"></i>لوحة التحكم
+                    </a>
+                    <a class="nav-link" href="#" onclick="showSection('products')">
+                        <i class="fas fa-box"></i>إدارة المنتجات
+                    </a>
+                    <a class="nav-link" href="#" onclick="showSection('orders')">
+                        <i class="fas fa-shopping-cart"></i>إدارة الطلبات
+                    </a>
+                    <a class="nav-link" href="#" onclick="showSection('customers')">
+                        <i class="fas fa-users"></i>إدارة العملاء
+                    </a>
+                    <a class="nav-link" href="#" onclick="showSection('analytics')">
+                        <i class="fas fa-chart-bar"></i>التحليلات
+                    </a>
+                    <a class="nav-link" href="#" onclick="showSection('profit')">
+                        <i class="fas fa-calculator"></i>حساب الأرباح
+                    </a>
+                    <a class="nav-link" href="#" onclick="showSection('reviews')">
+                        <i class="fas fa-star"></i>إدارة المراجعات
+                    </a>
+                    <a class="nav-link" href="#" onclick="showSection('settings')">
+                        <i class="fas fa-cog"></i>الإعدادات
+                    </a>
+                </nav>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 p-4">
+                <!-- Dashboard Section -->
+                <div id="dashboard-section" class="content-section">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2>لوحة التحكم</h2>
+                        <div>
+                            <button class="btn btn-primary" onclick="refreshData()">
+                                <i class="fas fa-sync-alt"></i> تحديث البيانات
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Statistics Cards -->
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div class="stat-number" id="total-sales">0</div>
+                                <div>إجمالي المبيعات (ريال)</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card success">
+                                <div class="stat-number" id="total-orders">0</div>
+                                <div>إجمالي الطلبات</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card warning">
+                                <div class="stat-number" id="total-products">5</div>
+                                <div>المنتجات</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card danger">
+                                <div class="stat-number" id="total-customers">0</div>
+                                <div>العملاء</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Orders -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-shopping-cart"></i> آخر الطلبات</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>رقم الطلب</th>
+                                            <th>العميل</th>
+                                            <th>المنتجات</th>
+                                            <th>المبلغ</th>
+                                            <th>الحالة</th>
+                                            <th>التاريخ</th>
+                                            <th>الإجراءات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recent-orders">
+                                        <tr>
+                                            <td colspan="7" class="text-center">لا توجد طلبات حالياً</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Products Section -->
+                <div id="products-section" class="content-section" style="display: none;">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2>إدارة المنتجات</h2>
+                        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#productModal" onclick="openProductModal()">
+                            <i class="fas fa-plus"></i> إضافة منتج جديد
+                        </button>
+                    </div>
+
+                    <!-- Products Table -->
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>الصورة</th>
+                                            <th>اسم المنتج</th>
+                                            <th>الفئة</th>
+                                            <th>السعر</th>
+                                            <th>الكمية</th>
+                                            <th>التقييم</th>
+                                            <th>الإجراءات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="products-table">
+                                        <!-- Products will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Orders Section -->
+                <div id="orders-section" class="content-section" style="display: none;">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2>إدارة الطلبات</h2>
+                        <div class="btn-group">
+                            <button class="btn btn-outline-primary" onclick="filterOrders('all')">الكل</button>
+                            <button class="btn btn-outline-primary" onclick="filterOrders('pending')">معلق</button>
+                            <button class="btn btn-outline-primary" onclick="filterOrders('processing')">قيد المعالجة</button>
+                            <button class="btn btn-outline-primary" onclick="filterOrders('shipped')">تم الشحن</button>
+                            <button class="btn btn-outline-primary" onclick="filterOrders('delivered')">تم التسليم</button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>رقم الطلب</th>
+                                            <th>العميل</th>
+                                            <th>المنتجات</th>
+                                            <th>المبلغ الإجمالي</th>
+                                            <th>حالة الطلب</th>
+                                            <th>تاريخ الطلب</th>
+                                            <th>الإجراءات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="orders-table">
+                                        <!-- Orders will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customers Section -->
+                <div id="customers-section" class="content-section" style="display: none;">
+                    <h2 class="mb-4">إدارة العملاء</h2>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>الاسم</th>
+                                            <th>البريد الإلكتروني</th>
+                                            <th>رقم الهاتف</th>
+                                            <th>عدد الطلبات</th>
+                                            <th>إجمالي المشتريات</th>
+                                            <th>تاريخ التسجيل</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="customers-table">
+                                        <tr>
+                                            <td colspan="6" class="text-center">لا يوجد عملاء مسجلين حالياً</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytics Section -->
+                <div id="analytics-section" class="content-section" style="display: none;">
+                    <h2 class="mb-4">التحليلات والإحصائيات</h2>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>المنتجات الأكثر مبيعاً</h5>
+                                </div>
+                                <div class="card-body" id="top-products">
+                                    <!-- Top products will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>توزيع المبيعات حسب الفئة</h5>
+                                </div>
+                                <div class="card-body" id="category-stats">
+                                    <!-- Category stats will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profit Calculator Section -->
+                <div id="profit-section" class="content-section" style="display: none;">
+                    <h2 class="mb-4">حاسبة هامش الربح</h2>
+                    
+                    <div class="profit-calculation">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group mb-3">
+                                    <label>تكلفة المنتج (ريال)</label>
+                                    <input type="number" class="form-control" id="product-cost" placeholder="أدخل تكلفة المنتج">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group mb-3">
+                                    <label>سعر البيع (ريال)</label>
+                                    <input type="number" class="form-control" id="product-price" placeholder="أدخل سعر البيع">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group mb-3">
+                                    <label>الكمية المباعة</label>
+                                    <input type="number" class="form-control" id="quantity-sold" placeholder="أدخل الكمية المباعة">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center mt-3">
+                            <button class="btn btn-light" onclick="calculateProfit()">
+                                <i class="fas fa-calculator"></i> احسب الربح
+                            </button>
+                        </div>
+                        <div id="profit-results" class="mt-4" style="display: none;">
+                            <div class="row">
+                                <div class="col-md-3 text-center">
+                                    <h4 id="profit-margin">0%</h4>
+                                    <p>هامش الربح</p>
+                                </div>
+                                <div class="col-md-3 text-center">
+                                    <h4 id="total-profit">0 ريال</h4>
+                                    <p>إجمالي الربح</p>
+                                </div>
+                                <div class="col-md-3 text-center">
+                                    <h4 id="total-revenue">0 ريال</h4>
+                                    <p>إجمالي الإيرادات</p>
+                                </div>
+                                <div class="col-md-3 text-center">
+                                    <h4 id="total-cost">0 ريال</h4>
+                                    <p>إجمالي التكلفة</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product Profit Analysis -->
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h5>تحليل ربحية المنتجات</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="products-profit-analysis">
+                                <!-- Product profit analysis will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reviews Section -->
+                <div id="reviews-section" class="content-section" style="display: none;">
+                    <h2 class="mb-4">إدارة المراجعات والتقييمات</h2>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>المنتج</th>
+                                            <th>المراجع</th>
+                                            <th>التقييم</th>
+                                            <th>المراجعة</th>
+                                            <th>التاريخ</th>
+                                            <th>الإجراءات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="reviews-table">
+                                        <!-- Reviews will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Section -->
+                <div id="settings-section" class="content-section" style="display: none;">
+                    <h2 class="mb-4">إعدادات الموقع</h2>
+                    
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5>إعدادات عامة</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="general-settings">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            <label>اسم الموقع</label>
+                                            <input type="text" class="form-control" value="KitchenEase Store">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            <label>العملة</label>
+                                            <select class="form-select">
+                                                <option value="SAR" selected>ريال سعودي (SAR)</option>
+                                                <option value="USD">دولار أمريكي (USD)</option>
+                                                <option value="EUR">يورو (EUR)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label>وصف الموقع</label>
+                                    <textarea class="form-control" rows="3">متجر إلكتروني متخصص في أدوات المطبخ الذكية</textarea>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5>إعدادات الشحن</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label>رسوم الشحن المحلية (ريال)</label>
+                                        <input type="number" class="form-control" value="15">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label>رسوم الشحن الدولي (ريال)</label>
+                                        <input type="number" class="form-control" value="50">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" checked>
+                                    <label class="form-check-label">
+                                        شحن مجاني للطلبات أكثر من 200 ريال
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-end">
+                        <button class="btn btn-primary">
+                            <i class="fas fa-save"></i> حفظ الإعدادات
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Modal -->
+    <div class="modal fade" id="productModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="productModalTitle">إضافة منتج جديد</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="productForm">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label>اسم المنتج *</label>
+                                    <input type="text" class="form-control" id="product-name" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label>الفئة *</label>
+                                    <select class="form-select" id="product-category" required>
+                                        <option value="">اختر الفئة</option>
+                                        <option value="cookware">أواني الطبخ</option>
+                                        <option value="appliances">الأجهزة الكهربائية</option>
+                                        <option value="utensils">أدوات المطبخ</option>
+                                        <option value="storage">أدوات التخزين</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label>السعر (ريال) *</label>
+                                    <input type="number" step="0.01" class="form-control" id="product-price-modal" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label>الكمية المتاحة</label>
+                                    <input type="number" class="form-control" id="product-quantity" value="0">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label>تكلفة المنتج (للربح)</label>
+                                    <input type="number" step="0.01" class="form-control" id="product-cost-modal">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label>صورة المنتج</label>
+                                    <input type="url" class="form-control" id="product-image" placeholder="رابط الصورة">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label>وصف المنتج</label>
+                            <textarea class="form-control" id="product-description" rows="3"></textarea>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label>المواصفات</label>
+                            <textarea class="form-control" id="product-features" rows="3" placeholder="اكتب كل مواصفة في سطر منفصل"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-primary" onclick="saveProduct()">
+                        <span class="loading spinner-border spinner-border-sm" style="display: none;"></span>
+                        حفظ المنتج
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Details Modal -->
+    <div class="modal fade" id="orderModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">تفاصيل الطلب</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="order-details">
+                    <!-- Order details will be loaded here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Initialize admin panel
+        document.addEventListener('DOMContentLoaded', function() {
+            loadInitialData();
+            updateDashboard();
+        });
+
+        // Global variables
+        let currentEditingProduct = null;
+        let currentOrders = [];
+        let currentCustomers = [];
+        let currentReviews = [];
+
+        // Sample products data
+        let products = [
+            {
+                id: 1,
+                name: "Air Fryer XL ذكي",
+                category: "appliances",
+                price: 129.99,
+                cost: 85.00,
+                quantity: 25,
+                image: "https://via.placeholder.com/80x80/4CAF50/white?text=AF",
+                description: "مقلاة هوائية ذكية بسعة كبيرة مع تقنية التحكم بالهاتف المحمول",
+                features: [
+                    "سعة 5.5 لتر",
+                    "تحكم بالهاتف المحمول",
+                    "8 برامج طبخ مدمجة",
+                    "قاعدة غير لاصقة"
+                ],
+                rating: 4.8,
+                reviews: 847,
+                sold: 156
+            },
+            {
+                id: 2,
+                name: "مفرمة الثوم الكهربائية",
+                category: "appliances",
+                price: 45.99,
+                cost: 28.50,
+                quantity: 40,
+                image: "https://via.placeholder.com/80x80/2196F3/white?text=GC",
+                description: "مفرمة كهربائية متطورة لتقطيع الثوم والبصل بسرعة",
+                features: [
+                    "قاعدة آمنة من الانزلاق",
+                    "سهلة التنظيف",
+                    "طاقة منخفضة",
+                    "شفط هوائي نظيف"
+                ],
+                rating: 4.6,
+                reviews: 423,
+                sold: 89
+            },
+            {
+                id: 3,
+                name: "ميزان حرارة لحم بلوتوث",
+                category: "appliances",
+                price: 67.49,
+                cost: 42.00,
+                quantity: 18,
+                image: "https://via.placeholder.com/80x80/FF9800/white?text=BT",
+                description: "ميزان حرارة لحم ذكي مع اتصال بلوتوث",
+                features: [
+                    "اتصال بلوتوث",
+                    "عرض درجة الحرارة على الهاتف",
+                    "مقاوم للماء",
+                    "بطارية طويلة الأمد"
+                ],
+                rating: 4.7,
+                reviews: 256,
+                sold: 67
+            },
+            {
+                id: 4,
+                name: "موزع صابون لمس أوتوماتيكي",
+                category: "appliances",
+                price: 32.99,
+                cost: 19.50,
+                quantity: 35,
+                image: "https://via.placeholder.com/80x80/9C27B0/white?text=SD",
+                description: "موزع صابون ذكي يعمل باللمس أوتوماتيكياً",
+                features: [
+                    "تقنية الاستشعار باللمس",
+                    "مقاومة للماء IPX4",
+                    "سعة 300 مل",
+                    "بطارية قابلة للشحن"
+                ],
+                rating: 4.5,
+                reviews: 189,
+                sold: 45
+            },
+            {
+                id: 5,
+                name: "خلاط عصائر USB محمول",
+                category: "appliances",
+                price: 28.99,
+                cost: 17.50,
+                quantity: 50,
+                image: "https://via.placeholder.com/80x80/F44336/white?text=PB",
+                description: "خلاط عصائر محمول يعمل بشاحن USB",
+                features: [
+                    "عمل محمول مع USB",
+                    "قاعدة آمنة",
+                    "سهلة التنظيف",
+                    "سعة 400 مل"
+                ],
+                rating: 4.4,
+                reviews: 312,
+                sold: 98
+            }
+        ];
+
+        // Initialize localStorage
+        function initializeStorage() {
+            if (!localStorage.getItem('adminProducts')) {
+                localStorage.setItem('adminProducts', JSON.stringify(products));
+            }
+            if (!localStorage.getItem('adminOrders')) {
+                localStorage.setItem('adminOrders', JSON.stringify([]));
+            }
+            if (!localStorage.getItem('adminCustomers')) {
+                localStorage.setItem('adminCustomers', JSON.stringify([]));
+            }
+            if (!localStorage.getItem('adminReviews')) {
+                localStorage.setItem('adminReviews', JSON.stringify([]));
+            }
+        }
+
+        // Load initial data
+        function loadInitialData() {
+            initializeStorage();
+            loadProducts();
+            loadOrders();
+            loadCustomers();
+            loadReviews();
+        }
+
+        // Show section
+        function showSection(sectionName) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => section.style.display = 'none');
+
+            // Remove active class from all nav links
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => link.classList.remove('active'));
+
+            // Show selected section
+            const targetSection = document.getElementById(sectionName + '-section');
+            if (targetSection) {
+                targetSection.style.display = 'block';
+            }
+
+            // Add active class to clicked link
+            event.target.classList.add('active');
+
+            // Load section data
+            switch(sectionName) {
+                case 'products':
+                    loadProducts();
+                    break;
+                case 'orders':
+                    loadOrders();
+                    break;
+                case 'customers':
+                    loadCustomers();
+                    break;
+                case 'analytics':
+                    loadAnalytics();
+                    break;
+                case 'profit':
+                    loadProfitAnalysis();
+                    break;
+                case 'reviews':
+                    loadReviews();
+                    break;
+            }
+        }
+
+        // Dashboard functions
+        function updateDashboard() {
+            const storedProducts = JSON.parse(localStorage.getItem('adminProducts')) || products;
+            const storedOrders = JSON.parse(localStorage.getItem('adminOrders')) || [];
+            const storedCustomers = JSON.parse(localStorage.getItem('adminCustomers')) || [];
+
+            // Calculate total sales
+            const totalSales = storedOrders.reduce((sum, order) => sum + (order.total || 0), 0);
+            document.getElementById('total-sales').textContent = totalSales.toFixed(2);
+
+            // Update other stats
+            document.getElementById('total-orders').textContent = storedOrders.length;
+            document.getElementById('total-products').textContent = storedProducts.length;
+            document.getElementById('total-customers').textContent = storedCustomers.length;
+
+            // Load recent orders
+            loadRecentOrders();
+        }
+
+        function loadRecentOrders() {
+            const storedOrders = JSON.parse(localStorage.getItem('adminOrders')) || [];
+            const recentOrdersTable = document.getElementById('recent-orders');
+
+            if (storedOrders.length === 0) {
+                recentOrdersTable.innerHTML = '<tr><td colspan="7" class="text-center">لا توجد طلبات حالياً</td></tr>';
+                return;
+            }
+
+            recentOrdersTable.innerHTML = storedOrders.slice(0, 5).map(order => `
+                <tr>
+                    <td>#${order.id}</td>
+                    <td>${order.customerName || 'عميل مجهول'}</td>
+                    <td>${order.items ? order.items.length : 0} منتج</td>
+                    <td>${order.total || 0} ريال</td>
+                    <td><span class="order-status status-${order.status}">${getOrderStatusText(order.status)}</span></td>
+                    <td>${order.date || 'غير محدد'}</td>
+                    <td>
+                        <button class="btn btn-sm btn-info" onclick="viewOrder(${order.id})">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function refreshData() {
+            updateDashboard();
+            showAlert('تم تحديث البيانات بنجاح!', 'success');
+        }
+
+        // Product management
+        function loadProducts() {
+            const storedProducts = JSON.parse(localStorage.getItem('adminProducts')) || products;
+            const productsTable = document.getElementById('products-table');
+
+            productsTable.innerHTML = storedProducts.map(product => `
+                <tr>
+                    <td>
+                        <img src="${product.image}" alt="${product.name}" class="product-image">
+                    </td>
+                    <td>
+                        <strong>${product.name}</strong><br>
+                        <small class="text-muted">${product.description || 'لا يوجد وصف'}</small>
+                    </td>
+                    <td>${getCategoryText(product.category)}</td>
+                    <td>
+                        <span class="text-success">${product.price} ريال</span><br>
+                        <small class="text-muted">تكلفة: ${product.cost || 'غير محدد'} ريال</small>
+                    </td>
+                    <td>${product.quantity || 0}</td>
+                    <td>
+                        ${product.rating} ⭐<br>
+                        <small class="text-muted">${product.reviews} مراجعة</small>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-warning btn-action" onclick="editProduct(${product.id})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger btn-action" onclick="deleteProduct(${product.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function openProductModal(productId = null) {
+            const modal = new bootstrap.Modal(document.getElementById('productModal'));
+            const title = document.getElementById('productModalTitle');
+            
+            if (productId) {
+                title.textContent = 'تعديل المنتج';
+                loadProductForEdit(productId);
+            } else {
+                title.textContent = 'إضافة منتج جديد';
+                document.getElementById('productForm').reset();
+                currentEditingProduct = null;
+            }
+            
+            modal.show();
+        }
+
+        function loadProductForEdit(productId) {
+            const storedProducts = JSON.parse(localStorage.getItem('adminProducts')) || products;
+            const product = storedProducts.find(p => p.id === productId);
+            
+            if (product) {
+                currentEditingProduct = product;
+                document.getElementById('product-name').value = product.name;
+                document.getElementById('product-category').value = product.category;
+                document.getElementById('product-price-modal').value = product.price;
+                document.getElementById('product-cost-modal').value = product.cost || '';
+                document.getElementById('product-quantity').value = product.quantity || 0;
+                document.getElementById('product-image').value = product.image || '';
+                document.getElementById('product-description').value = product.description || '';
+                document.getElementById('product-features').value = product.features ? product.features.join('\n') : '';
+            }
+        }
+
+        function saveProduct() {
+            const loading = document.querySelector('#productModal .loading');
+            loading.style.display = 'inline-block';
+
+            setTimeout(() => {
+                const form = document.getElementById('productForm');
+                const formData = new FormData(form);
+                
+                const productData = {
+                    id: currentEditingProduct ? currentEditingProduct.id : Date.now(),
+                    name: document.getElementById('product-name').value,
+                    category: document.getElementById('product-category').value,
+                    price: parseFloat(document.getElementById('product-price-modal').value),
+                    cost: parseFloat(document.getElementById('product-cost-modal').value) || 0,
+                    quantity: parseInt(document.getElementById('product-quantity').value) || 0,
+                    image: document.getElementById('product-image').value || 'https://via.placeholder.com/80x80/cccccc/white?text=No+Image',
+                    description: document.getElementById('product-description').value,
+                    features: document.getElementById('product-features').value.split('\n').filter(f => f.trim()),
+                    rating: 4.0,
+                    reviews: 0,
+                    sold: 0
+                };
+
+                const storedProducts = JSON.parse(localStorage.getItem('adminProducts')) || [];
+
+                if (currentEditingProduct) {
+                    // Update existing product
+                    const index = storedProducts.findIndex(p => p.id === currentEditingProduct.id);
+                    if (index !== -1) {
+                        storedProducts[index] = productData;
+                    }
+                    showAlert('تم تحديث المنتج بنجاح!', 'success');
+                } else {
+                    // Add new product
+                    storedProducts.push(productData);
+                    showAlert('تم إضافة المنتج بنجاح!', 'success');
+                }
+
+                localStorage.setItem('adminProducts', JSON.stringify(storedProducts));
+                loadProducts();
+                updateDashboard();
+                
+                loading.style.display = 'none';
+                bootstrap.Modal.getInstance(document.getElementById('productModal')).hide();
+            }, 1000);
+        }
+
+        function editProduct(productId) {
+            openProductModal(productId);
+        }
+
+        function deleteProduct(productId) {
+            if (confirm('هل أنت متأكد من حذف هذا المنتج؟')) {
+                const storedProducts = JSON.parse(localStorage.getItem('adminProducts')) || [];
+                const filteredProducts = storedProducts.filter(p => p.id !== productId);
+                localStorage.setItem('adminProducts', JSON.stringify(filteredProducts));
+                loadProducts();
+                updateDashboard();
+                showAlert('تم حذف المنتج بنجاح!', 'success');
+            }
+        }
+
+        // Order management
+        function loadOrders() {
+            const storedOrders = JSON.parse(localStorage.getItem('adminOrders')) || [];
+            const ordersTable = document.getElementById('orders-table');
+
+            if (storedOrders.length === 0) {
+                ordersTable.innerHTML = '<tr><td colspan="7" class="text-center">لا توجد طلبات حالياً</td></tr>';
+                return;
+            }
+
+            ordersTable.innerHTML = storedOrders.map(order => `
+                <tr>
+                    <td><strong>#${order.id}</strong></td>
+                    <td>${order.customerName || 'عميل مجهول'}</td>
+                    <td>${order.items ? order.items.map(item => item.name).join(', ') : 'لا توجد منتجات'}</td>
+                    <td><strong>${order.total || 0} ريال</strong></td>
+                    <td><span class="order-status status-${order.status}">${getOrderStatusText(order.status)}</span></td>
+                    <td>${order.date || 'غير محدد'}</td>
+                    <td>
+                        <button class="btn btn-sm btn-info" onclick="viewOrder(${order.id})">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn btn-sm btn-warning" onclick="updateOrderStatus(${order.id})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function filterOrders(status) {
+            const storedOrders = JSON.parse(localStorage.getItem('adminOrders')) || [];
+            const ordersTable = document.getElementById('orders-table');
+
+            let filteredOrders = storedOrders;
+            if (status !== 'all') {
+                filteredOrders = storedOrders.filter(order => order.status === status);
+            }
+
+            if (filteredOrders.length === 0) {
+                ordersTable.innerHTML = '<tr><td colspan="7" class="text-center">لا توجد طلبات في هذه الفئة</td></tr>';
+                return;
+            }
+
+            ordersTable.innerHTML = filteredOrders.map(order => `
+                <tr>
+                    <td><strong>#${order.id}</strong></td>
+                    <td>${order.customerName || 'عميل مجهول'}</td>
+                    <td>${order.items ? order.items.map(item => item.name).join(', ') : 'لا توجد منتجات'}</td>
+                    <td><strong>${order.total || 0} ريال</strong></td>
+                    <td><span class="order-status status-${order.status}">${getOrderStatusText(order.status)}</span></td>
+                    <td>${order.date || 'غير محدد'}</td>
+                    <td>
+                        <button class="btn btn-sm btn-info" onclick="viewOrder(${order.id})">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn btn-sm btn-warning" onclick="updateOrderStatus(${order.id})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function viewOrder(orderId) {
+            const storedOrders = JSON.parse(localStorage.getItem('adminOrders')) || [];
+            const order = storedOrders.find(o => o.id === orderId);
+            
+            if (order) {
+                const modal = document.getElementById('order-details');
+                modal.innerHTML = `
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>معلومات الطلب</h6>
+                            <p><strong>رقم الطلب:</strong> #${order.id}</p>
+                            <p><strong>التاريخ:</strong> ${order.date}</p>
+                            <p><strong>الحالة:</strong> <span class="order-status status-${order.status}">${getOrderStatusText(order.status)}</span></p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>معلومات العميل</h6>
+                            <p><strong>الاسم:</strong> ${order.customerName}</p>
+                            <p><strong>الهاتف:</strong> ${order.customerPhone}</p>
+                            <p><strong>العنوان:</strong> ${order.customerAddress}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <h6>المنتجات المطلوبة</h6>
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>المنتج</th>
+                                    <th>الكمية</th>
+                                    <th>السعر</th>
+                                    <th>الإجمالي</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${order.items ? order.items.map(item => `
+                                    <tr>
+                                        <td>${item.name}</td>
+                                        <td>${item.quantity}</td>
+                                        <td>${item.price} ريال</td>
+                                        <td>${(item.price * item.quantity).toFixed(2)} ريال</td>
+                                    </tr>
+                                `).join('') : '<tr><td colspan="4">لا توجد منتجات</td></tr>'}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-end">
+                        <h5>الإجمالي: ${order.total || 0} ريال</h5>
+                    </div>
+                `;
+                
+                const modalInstance = new bootstrap.Modal(document.getElementById('orderModal'));
+                modalInstance.show();
+            }
+        }
+
+        function updateOrderStatus(orderId) {
+            const status = prompt('حالة الطلب (pending, processing, shipped, delivered, cancelled):');
+            if (status && ['pending', 'processing', 'shipped', 'delivered', 'cancelled'].includes(status)) {
+                const storedOrders = JSON.parse(localStorage.getItem('adminOrders')) || [];
+                const orderIndex = storedOrders.findIndex(o => o.id === orderId);
+                if (orderIndex !== -1) {
+                    storedOrders[orderIndex].status = status;
+                    localStorage.setItem('adminOrders', JSON.stringify(storedOrders));
+                    loadOrders();
+                    showAlert('تم تحديث حالة الطلب بنجاح!', 'success');
+                }
+            }
+        }
+
+        // Customer management
+        function loadCustomers() {
+            const storedCustomers = JSON.parse(localStorage.getItem('adminCustomers')) || [];
+            const customersTable = document.getElementById('customers-table');
+
+            if (storedCustomers.length === 0) {
+                customersTable.innerHTML = '<tr><td colspan="6" class="text-center">لا يوجد عملاء مسجلين حالياً</td></tr>';
+                return;
+            }
+
+            customersTable.innerHTML = storedCustomers.map(customer => `
+                <tr>
+                    <td>${customer.name}</td>
+                    <td>${customer.email}</td>
+                    <td>${customer.phone}</td>
+                    <td>${customer.orders || 0}</td>
+                    <td>${customer.totalSpent || 0} ريال</td>
+                    <td>${customer.registrationDate}</td>
+                </tr>
+            `).join('');
+        }
+
+        // Analytics
+        function loadAnalytics() {
+            loadTopProducts();
+            loadCategoryStats();
+        }
+
+        function loadTopProducts() {
+            const storedProducts = JSON.parse(localStorage.getItem('adminProducts')) || products;
+            const topProducts = storedProducts
+                .sort((a, b) => (b.sold || 0) - (a.sold || 0))
+                .slice(0, 5);
+
+            const container = document.getElementById('top-products');
+            container.innerHTML = topProducts.map(product => `
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <strong>${product.name}</strong><br>
+                        <small class="text-muted">${product.category}</small>
+                    </div>
+                    <div class="text-end">
+                        <div>${product.sold || 0} مبيعة</div>
+                        <div class="text-success">${(product.sold * product.price).toFixed(2)} ريال</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadCategoryStats() {
+            const storedProducts = JSON.parse(localStorage.getItem('adminProducts')) || products;
+            const categoryCount = {};
+            
+            storedProducts.forEach(product => {
+                categoryCount[product.category] = (categoryCount[product.category] || 0) + 1;
+            });
+
+            const container = document.getElementById('category-stats');
+            container.innerHTML = Object.entries(categoryCount).map(([category, count]) => `
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span>${getCategoryText(category)}</span>
+                    <span class="badge bg-primary">${count}</span>
+                </div>
+            `).join('');
+        }
+
+        // Profit calculator
+        function calculateProfit() {
+            const cost = parseFloat(document.getElementById('product-cost').value) || 0;
+            const price = parseFloat(document.getElementById('product-price').value) || 0;
+            const quantity = parseInt(document.getElementById('quantity-sold').value) || 0;
+
+            if (cost > 0 && price > 0 && quantity > 0) {
+                const profitMargin = ((price - cost) / price * 100).toFixed(2);
+                const totalProfit = (price - cost) * quantity;
+                const totalRevenue = price * quantity;
+                const totalCost = cost * quantity;
+
+                document.getElementById('profit-margin').textContent = profitMargin + '%';
+                document.getElementById('total-profit').textContent = totalProfit.toFixed(2) + ' ريال';
+                document.getElementById('total-revenue').textContent = totalRevenue.toFixed(2) + ' ريال';
+                document.getElementById('total-cost').textContent = totalCost.toFixed(2) + ' ريال';
+                
+                document.getElementById('profit-results').style.display = 'block';
+            } else {
+                alert('يرجى إدخال جميع القيم المطلوبة');
+            }
+        }
+
+        function loadProfitAnalysis() {
+            const storedProducts = JSON.parse(localStorage.getItem('adminProducts')) || products;
+            const container = document.getElementById('products-profit-analysis');
+            
+            const profitableProducts = storedProducts
+                .filter(product => product.cost && product.cost > 0)
+                .map(product => {
+                    const profitMargin = ((product.price - product.cost) / product.price * 100);
+                    const totalProfit = (product.price - product.cost) * (product.sold || 0);
+                    return { ...product, profitMargin, totalProfit };
+                })
+                .sort((a, b) => b.profitMargin - a.profitMargin);
+
+            container.innerHTML = profitableProducts.map(product => `
+                <div class="row align-items-center mb-3 p-3 border rounded">
+                    <div class="col-md-3">
+                        <strong>${product.name}</strong><br>
+                        <small class="text-muted">السعر: ${product.price} ريال</small>
+                    </div>
+                    <div class="col-md-3">
+                        <small>التكلفة: ${product.cost} ريال</small><br>
+                        <small>المبيعات: ${product.sold || 0}</small>
+                    </div>
+                    <div class="col-md-3">
+                        <span class="badge ${product.profitMargin > 30 ? 'bg-success' : product.profitMargin > 15 ? 'bg-warning' : 'bg-danger'}">
+                            هامش الربح: ${product.profitMargin.toFixed(1)}%
+                        </span>
+                    </div>
+                    <div class="col-md-3 text-end">
+                        <strong class="${product.totalProfit > 1000 ? 'text-success' : 'text-warning'}">
+                            ${product.totalProfit.toFixed(2)} ريال
+                        </strong>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Reviews management
+        function loadReviews() {
+            const storedReviews = JSON.parse(localStorage.getItem('adminReviews')) || [];
+            const reviewsTable = document.getElementById('reviews-table');
+
+            if (storedReviews.length === 0) {
+                reviewsTable.innerHTML = '<tr><td colspan="6" class="text-center">لا توجد مراجعات حالياً</td></tr>';
+                return;
+            }
+
+            reviewsTable.innerHTML = storedReviews.map(review => `
+                <tr>
+                    <td>${review.productName || 'منتج غير محدد'}</td>
+                    <td>${review.customerName}</td>
+                    <td>${'⭐'.repeat(review.rating)} (${review.rating})</td>
+                    <td>${review.comment}</td>
+                    <td>${review.date}</td>
+                    <td>
+                        <button class="btn btn-sm btn-danger" onclick="deleteReview(${review.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function deleteReview(reviewId) {
+            if (confirm('هل أنت متأكد من حذف هذه المراجعة؟')) {
+                const storedReviews = JSON.parse(localStorage.getItem('adminReviews')) || [];
+                const filteredReviews = storedReviews.filter(r => r.id !== reviewId);
+                localStorage.setItem('adminReviews', JSON.stringify(filteredReviews));
+                loadReviews();
+                showAlert('تم حذف المراجعة بنجاح!', 'success');
+            }
+        }
+
+        // Utility functions
+        function getCategoryText(category) {
+            const categories = {
+                'cookware': 'أواني الطبخ',
+                'appliances': 'الأجهزة الكهربائية',
+                'utensils': 'أدوات المطبخ',
+                'storage': 'أدوات التخزين'
+            };
+            return categories[category] || category;
+        }
+
+        function getOrderStatusText(status) {
+            const statuses = {
+                'pending': 'معلق',
+                'processing': 'قيد المعالجة',
+                'shipped': 'تم الشحن',
+                'delivered': 'تم التسليم',
+                'cancelled': 'ملغي'
+            };
+            return statuses[status] || status;
+        }
+
+        function showAlert(message, type) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+            alertDiv.style.top = '20px';
+            alertDiv.style.right = '20px';
+            alertDiv.style.zIndex = '9999';
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            document.body.appendChild(alertDiv);
+            
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 5000);
+        }
+
+        function logout() {
+            if (confirm('هل تريد تسجيل الخروج؟')) {
+                // Clear any session data
+                localStorage.removeItem('adminSession');
+                alert('تم تسجيل الخروج بنجاح');
+                // In a real application, you would redirect to login page
+                window.location.href = 'index_complete.html';
+            }
+        }
+
+        // Add sample orders for demonstration
+        function addSampleOrders() {
+            const sampleOrders = [
+                {
+                    id: 1001,
+                    customerName: 'أحمد محمد',
+                    customerPhone: '+966501234567',
+                    customerAddress: 'الرياض، حي النخيل، شارع الملك فهد',
+                    items: [
+                        { name: 'Air Fryer XL ذكي', quantity: 1, price: 129.99 },
+                        { name: 'مفرمة الثوم الكهربائية', quantity: 1, price: 45.99 }
+                    ],
+                    total: 175.98,
+                    status: 'processing',
+                    date: '2025-12-04'
+                },
+                {
+                    id: 1002,
+                    customerName: 'فاطمة علي',
+                    customerPhone: '+966502345678',
+                    customerAddress: 'جدة، حي الصفا، شارع التحلية',
+                    items: [
+                        { name: 'ميزان حرارة لحم بلوتوث', quantity: 1, price: 67.49 }
+                    ],
+                    total: 67.49,
+                    status: 'shipped',
+                    date: '2025-12-03'
+                },
+                {
+                    id: 1003,
+                    customerName: 'محمد السعد',
+                    customerPhone: '+966503456789',
+                    customerAddress: 'الدمام، حي الشاطئ، شارع الخليج',
+                    items: [
+                        { name: 'موزع صابون لمس أوتوماتيكي', quantity: 2, price: 32.99 },
+                        { name: 'خلاط عصائر USB محمول', quantity: 1, price: 28.99 }
+                    ],
+                    total: 94.97,
+                    status: 'delivered',
+                    date: '2025-12-02'
+                }
+            ];
+
+            localStorage.setItem('adminOrders', JSON.stringify(sampleOrders));
+            updateDashboard();
+        }
+
+        // Initialize with sample data
+        addSampleOrders();
+    </script>
+</body>
+</html>
